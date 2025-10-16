@@ -5,7 +5,7 @@ import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-grap
 
 let graphClient: Client | null = null;
 
-const initializeGraphClient = async () => {
+export const initializeGraphClient = async () => {
   if (
     !process.env.AZURE_TENANT_ID ||
     !process.env.AZURE_CLIENT_ID ||

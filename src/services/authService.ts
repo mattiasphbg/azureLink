@@ -1,9 +1,7 @@
 import { ClientSecretCredential } from "@azure/identity";
-import {
-  AuthenticationProvider,
-  AuthenticationProviderOptions,
-  Client,
-} from "@microsoft/microsoft-graph-client";
+import { Client } from "@microsoft/microsoft-graph-client";
+
+import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
 
 let graphClient: Client | null = null;
 
@@ -21,22 +19,10 @@ const initializeGraphClient = async () => {
     process.env.AZURE_CLIENT_SECRET!
   );
 
-  const authProvider: AuthenticationProvider = {
-    getAccessToken: async (options?: AuthenticationProviderOptions) => {
-      // Use default scopes if no options are provided
-      const scopes = options?.scopes ?? [
-        "https://graph.microsoft.com/.default",
-      ];
+  const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+    scopes: ["https://graph.microsoft.com/.default"],
+  });
 
-      try {
-        const tokenResponse = await credential.getToken(scopes);
-        return tokenResponse.token;
-      } catch (error) {
-        console.error("Failed to get access token:", error);
-        throw error;
-      }
-    },
-  };
   const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
   return graphClient;
 };

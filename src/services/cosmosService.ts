@@ -13,3 +13,18 @@ const client = new CosmosClient({
   endpoint: endpoint,
   aadCredentials: credential,
 });
+
+export const createContainer = async (containerName: string) => {
+  await client.databases.createIfNotExists({
+    id: DATABASE_NAME,
+  });
+
+  const { container } = await client
+    .database(DATABASE_NAME)
+    .containers.createIfNotExists({
+      id: containerName,
+      partitionKey: "/id",
+    });
+
+  return container;
+};

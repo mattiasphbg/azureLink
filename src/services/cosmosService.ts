@@ -1,4 +1,4 @@
-import { CosmosClient } from "@azure/cosmos";
+import { CosmosClient, ItemDefinition, Resource } from "@azure/cosmos";
 import { DefaultAzureCredential, TokenCredential } from "@azure/identity";
 
 const credential: TokenCredential = new DefaultAzureCredential();
@@ -27,4 +27,21 @@ export const createContainer = async (containerName: string) => {
     });
 
   return container;
+};
+
+export const createItem = async (
+  containerName: string,
+  item: ItemDefinition
+): Promise<ItemDefinition & Resource> => {
+  const container = await client
+    .database(DATABASE_NAME)
+    .container(containerName);
+
+  const { resource } = await container.items.create(item);
+
+  if (!resource) {
+    throw new Error("Failed to create item");
+  }
+
+  return resource;
 };

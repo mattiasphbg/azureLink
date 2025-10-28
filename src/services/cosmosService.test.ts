@@ -48,7 +48,6 @@ describe("cosmosService", () => {
       }),
     };
 
-    // Configure mocks to return our mock client
     MockDefaultAzureCredential.mockImplementation(() => ({} as any));
     MockCosmosClient.mockImplementation(() => mockCosmosClient);
   });
